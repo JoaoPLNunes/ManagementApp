@@ -1,7 +1,11 @@
 import json
 import streamlit as st
+from dotenv import load_dotenv
+import os
 
-FICHEIRO = "/Users/tiagonunes/Documents/tarefas.json"
+load_dotenv()
+
+FICHEIRO = os.getenv("FICHEIRO")
 
 def carregar_tarefas():
     try:
