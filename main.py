@@ -1,11 +1,12 @@
-#type ignore
+# pylint: disable=E1101,E1136
+#type: ignore
 import json
 import streamlit as st
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
-FICHEIRO = os.getenv("FICHEIRO")
+FICHEIRO = "tarefas.json"
 if not FICHEIRO:
     raise FileNotFoundError("Não foi encontrado ficheiro json")
 def carregar_tarefas():
@@ -41,9 +42,20 @@ for prioridade in lista_prio:
     num_tarefa_baixa_completa = sum(1 for pt in tarefas["tarefas"] if pt["Prioridade"]=="Baixa" and pt["completa"] )
 st.subheader("Tarefas")
 for i, t in enumerate(tarefas["tarefas"]):
+    prio = t["Prioridade"].lower()
+    cor = {
+        "alta":"#C41E3A",
+        "média":"#FF5533",
+        "baixa": "#008000"}.get(prio,"#808080")
     col1, col2, col3 = st.columns([5,2,2])
     with col1:
-        st.write(f"{t['tarefa']}")
+        st.markdown(f"""<div style="background-color: {cor};
+                padding: 8px;
+                border-radius: 6px;
+                color: white;">
+                {t['tarefa']}
+            </div>""",
+            unsafe_allow_html=True)
     with col2:
         if not t["completa"]:
             if st.button("Completar", key=f"c{i}"):
